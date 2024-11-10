@@ -37,23 +37,12 @@ void htable_init(struct Hashtable *table)
 }
 
 /**
- * Frees the slots allocated by the hashtable.
+ * Frees the memory used by the hashtable.
  *
- * @note This also frees all the strings in use as keys and values.
+ * This does NOT free the strings in use as keys and values.
  */
 void htable_free(struct Hashtable *table)
 {
-    for (size_t i = 0; i < table->capacity; i++)
-    {
-        struct Entry *entry = &table->items[i];
-
-        if (entry->key != NULL)
-        {
-            free(entry->key);
-            free(entry->value);
-        }
-    }
-
     free(table->items);
 }
 
