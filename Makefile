@@ -14,3 +14,21 @@ run: build
 
 clean:
 	@rm -rf ./bin/*
+
+SOURCE_FILES = $(filter-out ./src/main.c, $(wildcard ./src/*.c))
+TEST_FILES = $(wildcard ./tests/*.c)
+
+# A target that doesn't exist, so anything depending on it
+# will be rebuilt everytime.
+.FORCE:
+
+tests/%.c: .FORCE
+	@clang -o ./bin/test.out $(CFLAGS) $(SOURCE_FILES) $@ -w
+	@echo "\033[4;33m"+ $@: "\033[0m"
+	@if ./bin/test.out; then \
+		echo "\033[1;32mPASS\033[0m"; \
+	else \
+		echo "\033[1;31mFAIL\033[0m"; \
+	fi
+
+test: $(TEST_FILES)
