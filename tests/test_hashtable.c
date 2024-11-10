@@ -5,7 +5,7 @@
 
 int main(void)
 {
-    Hashtable table;
+    struct Hashtable table;
     htable_init(&table);
 
     htable_set(&table, "key", "value");

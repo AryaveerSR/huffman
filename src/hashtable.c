@@ -28,12 +28,12 @@
  *
  * @param table A pointer to the hashtable.
  */
-void htable_init(Hashtable *table)
+void htable_init(struct Hashtable *table)
 {
     table->length = 0;
     table->capacity = INITIAL_SIZE;
 
-    table->items = calloc(INITIAL_SIZE, sizeof(Entry));
+    table->items = calloc(INITIAL_SIZE, sizeof(struct Entry));
 }
 
 /**
@@ -41,11 +41,11 @@ void htable_init(Hashtable *table)
  *
  * @note This also frees all the strings in use as keys and values.
  */
-void htable_free(Hashtable *table)
+void htable_free(struct Hashtable *table)
 {
     for (size_t i = 0; i < table->capacity; i++)
     {
-        Entry *entry = &table->items[i];
+        struct Entry *entry = &table->items[i];
 
         if (entry->key != NULL)
         {
@@ -82,13 +82,13 @@ static uint32_t htable_hash(char *ptr)
  * `htable_set()` uses this to create / override a new entry,
  * and `htable_get()` uses this to search for an entry.
  */
-static Entry *htable_find_entry(Hashtable *table, char *key)
+static struct Entry *htable_find_entry(struct Hashtable *table, char *key)
 {
     uint32_t idx = htable_hash(key) % table->capacity;
 
     while (true)
     {
-        Entry *entry = &table->items[idx];
+        struct Entry *entry = &table->items[idx];
 
         if ((entry->key == NULL) || (strcmp(entry->key, key) == 0))
         {
@@ -105,15 +105,15 @@ static Entry *htable_find_entry(Hashtable *table, char *key)
  * It allocates a new region, and iterates over all valid entries
  * in the old table and copies them to the newly calculated positions.
  */
-static void htable_grow(Hashtable *table)
+static void htable_grow(struct Hashtable *table)
 {
     trace("(%p) Growing hashtable from %d to %d.", table, table->capacity, table->capacity * 2);
 
     size_t old_capacity = table->capacity;
-    Entry *old_items = table->items;
+    struct Entry *old_items = table->items;
 
     table->capacity *= 2;
-    table->items = calloc(table->capacity, sizeof(Entry));
+    table->items = calloc(table->capacity, sizeof(struct Entry));
 
     if (table->items == NULL)
     {
@@ -122,14 +122,14 @@ static void htable_grow(Hashtable *table)
 
     for (size_t i = 0; i < old_capacity; i++)
     {
-        Entry *entry = &old_items[i];
+        struct Entry *entry = &old_items[i];
 
         if (entry->key == NULL)
         {
             continue;
         }
 
-        Entry *dest = htable_find_entry(table, entry->key);
+        struct Entry *dest = htable_find_entry(table, entry->key);
 
         dest->key = entry->key;
         dest->value = entry->value;
@@ -147,7 +147,7 @@ static void htable_grow(Hashtable *table)
  *
  * @returns Whether the entry was created (true) or updated (false).
  */
-bool htable_set(Hashtable *table, char *key, char *value)
+bool htable_set(struct Hashtable *table, char *key, char *value)
 {
     trace("(%p) Set \"%s\" to \"%s\".", table, key, value);
 
@@ -156,7 +156,7 @@ bool htable_set(Hashtable *table, char *key, char *value)
         htable_grow(table);
     }
 
-    Entry *entry = htable_find_entry(table, key);
+    struct Entry *entry = htable_find_entry(table, key);
     bool is_new_key = entry->key == NULL;
 
     if (is_new_key)
@@ -178,14 +178,14 @@ bool htable_set(Hashtable *table, char *key, char *value)
  *
  * @returns The corresponding value, or `NULL` if no entry was found.
  */
-char *htable_get(Hashtable *table, char *key)
+char *htable_get(struct Hashtable *table, char *key)
 {
     if (table->length == 0)
     {
         return NULL;
     }
 
-    Entry *entry = htable_find_entry(table, key);
+    struct Entry *entry = htable_find_entry(table, key);
 
     trace("(%p) Get \"%s\" = \"%s\".", table, key, entry->value);
     return entry->value;

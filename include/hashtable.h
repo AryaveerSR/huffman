@@ -3,24 +3,24 @@
 
 #include <stdbool.h>
 
-typedef struct
+struct Entry
 {
     char *key;
     char *value;
-} Entry;
+};
 
-typedef struct
+struct Hashtable
 {
-    Entry *items;
+    struct Entry *items;
 
     unsigned int length;
     unsigned int capacity;
-} Hashtable;
+};
 
-void htable_init(Hashtable *table);
-void htable_free(Hashtable *table);
+void htable_init(struct Hashtable *table);
+void htable_free(struct Hashtable *table);
 
-bool htable_set(Hashtable *table, char *key, char *value);
-char *htable_get(Hashtable *table, char *key);
+bool htable_set(struct Hashtable *table, char *key, char *value);
+char *htable_get(struct Hashtable *table, char *key);
 
 #endif
