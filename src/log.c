@@ -3,7 +3,7 @@
 
 #include "log.h"
 
-void _log(char *level, char *file, char *format, ...)
+void log_internal(char *level, char *file, char *format, ...)
 {
     va_list args;
     va_start(args, format);
