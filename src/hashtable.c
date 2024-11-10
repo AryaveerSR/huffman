@@ -5,9 +5,29 @@
 #include "hashtable.h"
 #include "log.h"
 
+/**
+ * A hashtable implementation that uses the FNV-1a hashing algorithm,
+ * with open addressing and linear probing.
+ *
+ * The API is similar to object-oriented programming; all "methods"
+ * for a hashtable take a pointer to a `Hashtable` struct.
+ *
+ * The implementation is largely taken from Crafting Interpreters [1],
+ * minus the ability to delete entries or relying on a string interner.
+ *
+ * [1] (https://craftinginterpreters.com/hash-tables.html)
+ */
+
 #define INITIAL_SIZE 32
 #define TABLE_MAX_LOAD 0.75
 
+/**
+ * Initialize a hashtable with some initial capacity (defined by `INITIAL_SIZE`).
+ *
+ * The implementation uses `calloc()` as the table uses NULL'ed `keys` for unused entries.
+ *
+ * @param table A pointer to the hashtable.
+ */
 void htable_init(Hashtable *table)
 {
     table->length = 0;
@@ -16,11 +36,30 @@ void htable_init(Hashtable *table)
     table->items = calloc(INITIAL_SIZE, sizeof(Entry));
 }
 
+/**
+ * Frees the slots allocated by the hashtable.
+ *
+ * @note This also frees all the strings in use as keys and values.
+ */
 void htable_free(Hashtable *table)
 {
+    for (size_t i = 0; i < table->capacity; i++)
+    {
+        Entry *entry = &table->items[i];
+
+        if (entry->key != NULL)
+        {
+            free(entry->key);
+            free(entry->value);
+        }
+    }
+
     free(table->items);
 }
 
+/**
+ * FNV-1a hashing functions slightly modified to work on null-terminated strings.
+ */
 static uint32_t htable_hash(char *ptr)
 {
     uint32_t hash = 2166136261u;
@@ -34,6 +73,15 @@ static uint32_t htable_hash(char *ptr)
     return hash;
 }
 
+/**
+ * Common helper function to find where an entry "should be".
+ *
+ * It returns either an empty slot where the entry should go,
+ * or a pointer to the entry if it already exists.
+ *
+ * `htable_set()` uses this to create / override a new entry,
+ * and `htable_get()` uses this to search for an entry.
+ */
 static Entry *htable_find_entry(Hashtable *table, char *key)
 {
     uint32_t idx = htable_hash(key) % table->capacity;
@@ -51,6 +99,12 @@ static Entry *htable_find_entry(Hashtable *table, char *key)
     }
 }
 
+/**
+ * Grows the table when it hits the max load permitted by `TABLE_MAX_LOAD`.
+ *
+ * It allocates a new region, and iterates over all valid entries
+ * in the old table and copies them to the newly calculated positions.
+ */
 static void htable_grow(Hashtable *table)
 {
     trace("(%p) Growing hashtable from %d to %d.", table, table->capacity, table->capacity * 2);
@@ -84,6 +138,15 @@ static void htable_grow(Hashtable *table)
     free(old_items);
 }
 
+/**
+ * Set or update an entry in the table.
+ *
+ * @param table A pointer to the hashtable.
+ * @param key A null-terminated key to set.
+ * @param value A null-terminated value.
+ *
+ * @returns Whether the entry was created (true) or updated (false).
+ */
 bool htable_set(Hashtable *table, char *key, char *value)
 {
     trace("(%p) Set \"%s\" to \"%s\".", table, key, value);
@@ -107,6 +170,14 @@ bool htable_set(Hashtable *table, char *key, char *value)
     return is_new_key;
 }
 
+/**
+ * Try searching the table for the specified key.
+ *
+ * @param table A pointer to the hashtable.
+ * @param key A null-terminated key to search for.
+ *
+ * @returns The corresponding value, or `NULL` if no entry was found.
+ */
 char *htable_get(Hashtable *table, char *key)
 {
     if (table->length == 0)
