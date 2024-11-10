@@ -32,4 +32,6 @@
 #define warn(ignore) ((void)0)
 #endif
 
+void _log(char *level, char *file, char *format, ...);
+
 #endif
