@@ -2,7 +2,7 @@ CFLAGS = -std=c18 -Iinclude
 
 CFLAGS += -Wall -Wextra -Wpedantic
 CFLAGS += -Wswitch-enum -Wstrict-prototypes -Wmissing-variable-declarations
-# CFLAGS += -Weverything -Wno-padded -Wno-extra-semi-stmt -Wno-declaration-after-statement -Wno-covered-switch-default
+# CFLAGS += -Weverything -Wno-padded -Wno-extra-semi-stmt -Wno-declaration-after-statement -Wno-covered-switch-default -Wformat-nonliteral
 
 .PHONY: clean build run
 

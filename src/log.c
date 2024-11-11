@@ -5,19 +5,19 @@
 
 #include "log.h"
 
-const char *level_text[] = {
+static const char *level_text[] = {
     [LEVEL_TRACE] = "\x1b[94mTRACE",
     [LEVEL_INFO] = "\x1b[32mINFO",
     [LEVEL_WARN] = "\x1b[33mWARN",
 };
 
-static enum Level filter = 255;
+static enum Level filter = LEVEL_NONE;
 
 /**
  * Initializes the logging system.
  *
  * This reads the `NEUR_LOG` environment variable and sets the minimum log level
- * to that value if valid. Default minimum log level is `255` (no logs printed).
+ * to that value if valid. Default minimum log level is `LEVEL_NONE` (no logs printed).
  */
 void log_init(void)
 {

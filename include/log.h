@@ -6,6 +6,8 @@ enum Level
     LEVEL_TRACE,
     LEVEL_INFO,
     LEVEL_WARN,
+
+    LEVEL_NONE,
 };
 
 void log_init(void);
