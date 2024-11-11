@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 
@@ -93,6 +94,16 @@ int main(void)
     assert(strcmp(htable_get(&table, "key"), "value") == 0);
 
     assert(htable_get(&table, "unknown_key") == NULL);
+
+    htable_free(&table);
+
+    htable_init(&table);
+
+    htable_insert(&table, "id", "value");
+    htable_insert(&table, "class", "value_");
+
+    htable_print(&table);
+    printf("\n");
 
     htable_free(&table);
 }

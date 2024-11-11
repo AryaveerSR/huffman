@@ -192,18 +192,22 @@ char *htable_get(struct Hashtable *table, char *key)
  */
 void htable_print(struct Hashtable *table)
 {
+    if (table->length == 0)
+    {
+        printf("{ }");
+        return;
+    }
+
     printf("{ ");
 
     for (unsigned int i = 0; i < table->capacity; i++)
     {
         struct Entry *entry = &table->items[i];
 
-        if (entry->key == NULL)
+        if (entry->key != NULL)
         {
-            continue;
+            printf("%s: \"%s\", ", entry->key, entry->value);
         }
-
-        printf("%s: \"%s\", ", entry->key, entry->value);
     }
 
     printf("}");
