@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdarg.h>
 
 #include "log.h"
@@ -12,11 +13,17 @@ const char *level_text[] = {
 
 static enum Level filter = 255;
 
+/**
+ * Initializes the logging system.
+ *
+ * This reads the `NEUR_LOG` environment variable and sets the minimum log level
+ * to that value if valid. Default minimum log level is `255` (no logs printed).
+ */
 void log_init(void)
 {
     const char *env_log_filter = getenv("NEUR_LOG");
 
-    if ((env_log_filter == NULL) || (env_log_filter[1] != '\0'))
+    if ((env_log_filter == NULL) || (strlen(env_log_filter) != 1))
     {
         return;
     }
@@ -37,7 +44,13 @@ void log_init(void)
     }
 }
 
-void log_event(enum Level level, char *file, char *format, ...)
+/**
+ * Logs an event to the terminal if the level satisfies the filter.
+ *
+ * @param level The level of the event.
+ * @param file The file where the event originated. This is usually passed by __FILE__ in macros.
+ */
+void log_event(enum Level level, char *file, unsigned int line, char *format, ...)
 {
     if (level < filter)
     {
@@ -47,7 +60,7 @@ void log_event(enum Level level, char *file, char *format, ...)
     va_list args;
     va_start(args, format);
 
-    printf("%s \x1b[90m[%s]:\x1b[0m ", level_text[level], file);
+    printf("%s \x1b[90m[%s:%d]:\x1b[0m ", level_text[level], file, line);
     vprintf(format, args);
     printf("\n");
 
