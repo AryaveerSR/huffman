@@ -8,28 +8,34 @@
 #define ENABLE_INFO
 #define ENABLE_WARN
 
-#if defined(ENABLE_LOGS) && defined(ENABLE_TRACE)
-#define trace(...) log_internal("\x1b[94mTRACE", __FILE__, __VA_ARGS__)
+#ifdef ENABLE_LOGS
+#define log(level, ...) log_internal(level, __FILE__, __VA_ARGS__)
 #else
-#define trace(ignore) ((void)0)
+#define log(level, ...) ((void)0)
 #endif
 
-#if defined(ENABLE_LOGS) && defined(ENABLE_DEBUG)
-#define debug(...) log_internal("\x1b[36mDEBUG", __FILE__, __VA_ARGS__)
+#ifdef ENABLE_TRACE
+#define trace(...) log("\x1b[94mTRACE", __VA_ARGS__)
 #else
-#define debug(ignore) ((void)0)
+#define trace(...) ((void)0)
 #endif
 
-#if defined(ENABLE_LOGS) && defined(ENABLE_INFO)
-#define info(...) log_internal("\x1b[32mINFO", __FILE__, __VA_ARGS__)
+#ifdef ENABLE_DEBUG
+#define debug(...) log("\x1b[36mDEBUG", __VA_ARGS__)
 #else
-#define info(ignore) ((void)0)
+#define debug(...) ((void)0)
 #endif
 
-#if defined(ENABLE_LOGS) && defined(ENABLE_WARN)
-#define warn(...) log_internal("\x1b[33mWARN", __FILE__, __VA_ARGS__)
+#ifdef ENABLE_INFO
+#define info(...) log("\x1b[32mINFO", __VA_ARGS__)
 #else
-#define warn(ignore) ((void)0)
+#define info(...) ((void)0)
+#endif
+
+#ifdef ENABLE_WARN
+#define warn(...) log("\x1b[33mWARN", __VA_ARGS__)
+#else
+#define warn(...) ((void)0)
 #endif
 
 void log_internal(char *level, char *file, char *format, ...);
