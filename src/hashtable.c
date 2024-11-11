@@ -12,8 +12,9 @@
  * The API is similar to object-oriented programming; all "methods"
  * for a hashtable take a pointer to a `Hashtable` struct.
  *
- * The implementation is largely taken from Crafting Interpreters [1],
- * minus the ability to delete entries or relying on a string interner.
+ * The implementation is largely taken from Crafting Interpreters [1].
+ *
+ * See also: Hashset implementation in `hashset.c`.
  *
  * [1] (https://craftinginterpreters.com/hash-tables.html)
  */
@@ -24,7 +25,7 @@
 /**
  * Initialize a hashtable with some initial capacity (defined by `INITIAL_SIZE`).
  *
- * The implementation uses `calloc()` as the table uses NULL'ed `keys` for unused entries.
+ * The implementation uses `calloc()` as the table uses NULL for unused entries.
  *
  * @param table A pointer to the hashtable.
  */
@@ -47,7 +48,7 @@ void htable_free(struct Hashtable *table)
 }
 
 /**
- * FNV-1a hashing functions slightly modified to work on null-terminated strings.
+ * FNV-1a hashing function.
  */
 static uint32_t htable_hash(char *ptr)
 {
@@ -63,7 +64,7 @@ static uint32_t htable_hash(char *ptr)
 }
 
 /**
- * Common helper function to find where an entry "should be".
+ * Helper function to find where an entry "should be".
  *
  * It returns either an empty slot where the entry should go,
  * or a pointer to the entry if it already exists.
