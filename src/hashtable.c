@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -179,4 +180,31 @@ char *htable_get(struct Hashtable *table, char *key)
 
     trace("(%p) Get \"%s\" = \"%s\".", table, key, entry->value);
     return entry->value;
+}
+
+/**
+ * Prints the hashtable to the terminal.
+ *
+ * Because of how hashtables work, the order elements are printed in may
+ * not be same.
+ *
+ * @param table The table to print.
+ */
+void htable_print(struct Hashtable *table)
+{
+    printf("{ ");
+
+    for (unsigned int i = 0; i < table->capacity; i++)
+    {
+        struct Entry *entry = &table->items[i];
+
+        if (entry->key == NULL)
+        {
+            continue;
+        }
+
+        printf("%s: \"%s\", ", entry->key, entry->value);
+    }
+
+    printf("}");
 }

@@ -23,4 +23,6 @@ void htable_free(struct Hashtable *table);
 bool htable_insert(struct Hashtable *table, char *key, char *value);
 char *htable_get(struct Hashtable *table, char *key);
 
+void htable_print(struct Hashtable *table);
+
 #endif
