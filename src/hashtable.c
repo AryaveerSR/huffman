@@ -107,7 +107,7 @@ static void htable_grow(struct Hashtable *table)
 
     if (table->items == NULL)
     {
-        exit(1);
+        panic("Out of memory.");
     }
 
     for (size_t i = 0; i < old_capacity; i++)

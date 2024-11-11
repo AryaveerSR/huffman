@@ -105,7 +105,7 @@ static void hashset_grow(struct Hashset *set)
 
     if (set->items == NULL)
     {
-        exit(1);
+        panic("Out of memory.");
     }
 
     for (size_t i = 0; i < old_capacity; i++)

@@ -18,4 +18,8 @@ void log_init(void);
 
 void log_event(enum Level level, char *file, unsigned int line, char *format, ...);
 
+#define panic(...) log_panic(__FILE__, __LINE__, __VA_ARGS__)
+
+void log_panic(char *file, unsigned int line, char *format, ...);
+
 #endif

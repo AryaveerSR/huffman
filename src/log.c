@@ -66,3 +66,17 @@ void log_event(enum Level level, char *file, unsigned int line, char *format, ..
 
     va_end(args);
 }
+
+void log_panic(char *file, unsigned int line, char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    printf("\x1b[31mPANIC \x1b[90m[%s:%d]:\x1b[0m ", file, line);
+    vprintf(format, args);
+    printf("\n");
+
+    va_end(args);
+
+    exit(1);
+}

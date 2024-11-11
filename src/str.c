@@ -53,7 +53,7 @@ char *str_intern(char *ptr, unsigned int length)
 
     if (buf == NULL)
     {
-        exit(1);
+        panic("Out of memory.");
     }
 
     memcpy(buf, ptr, length);
