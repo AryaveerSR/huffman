@@ -2,9 +2,12 @@
 #include <assert.h>
 
 #include "hashtable.h"
+#include "log.h"
 
 int main(void)
 {
+    log_init();
+
     struct Hashtable table;
     htable_init(&table);
 

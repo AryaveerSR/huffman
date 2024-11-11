@@ -2,9 +2,12 @@
 #include <assert.h>
 
 #include "hashset.h"
+#include "log.h"
 
 int main(void)
 {
+    log_init();
+
     struct Hashset set;
     hashset_init(&set);
 
