@@ -134,7 +134,7 @@ static void hashset_grow(struct Hashset *set)
  */
 char *hashset_insert(struct Hashset *set, char *value)
 {
-    trace("(%p) Insert \"%s\".", set, value);
+    trace("(%p) Inserting \"%s\".", set, value);
 
     if ((set->length + 1) > (set->capacity * TABLE_MAX_LOAD))
     {
@@ -145,9 +145,11 @@ char *hashset_insert(struct Hashset *set, char *value)
 
     if (*entry == NULL)
     {
+        trace("Inserting as new entry.");
+
+        *entry = value;
         set->length++;
     }
 
-    *entry = value;
     return *entry;
 }
