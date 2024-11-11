@@ -68,7 +68,7 @@ static uint32_t htable_hash(char *ptr)
  * It returns either an empty slot where the entry should go,
  * or a pointer to the entry if it already exists.
  *
- * `htable_set()` uses this to create / override a new entry,
+ * `htable_insert()` uses this to create / override a new entry,
  * and `htable_get()` uses this to search for an entry.
  */
 static struct Entry *htable_find_entry(struct Hashtable *table, char *key)
@@ -136,7 +136,7 @@ static void htable_grow(struct Hashtable *table)
  *
  * @returns Whether the entry was created (true) or updated (false).
  */
-bool htable_set(struct Hashtable *table, char *key, char *value)
+bool htable_insert(struct Hashtable *table, char *key, char *value)
 {
     trace("(%p) Set \"%s\" to \"%s\".", table, key, value);
 

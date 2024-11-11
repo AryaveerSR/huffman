@@ -20,7 +20,7 @@ struct Hashtable
 void htable_init(struct Hashtable *table);
 void htable_free(struct Hashtable *table);
 
-bool htable_set(struct Hashtable *table, char *key, char *value);
+bool htable_insert(struct Hashtable *table, char *key, char *value);
 char *htable_get(struct Hashtable *table, char *key);
 
 #endif
