@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <stdnoreturn.h>
 
 #include "log.h"
 
@@ -67,7 +68,7 @@ void log_event(enum Level level, char *file, unsigned int line, char *format, ..
     va_end(args);
 }
 
-void log_panic(char *file, unsigned int line, char *format, ...)
+noreturn void log_panic(char *file, unsigned int line, char *format, ...)
 {
     va_list args;
     va_start(args, format);
