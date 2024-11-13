@@ -26,7 +26,7 @@ void str_init(void)
  */
 void str_free(void)
 {
-    for (unsigned int i = 0; i < pool.length; i++)
+    for (unsigned int i = 0; i < pool.capacity; i++)
     {
         char *entry = pool.items[i];
 
