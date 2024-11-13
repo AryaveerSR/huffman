@@ -56,6 +56,8 @@ void node_free(struct Node *node)
 
             node_free(current_child);
         }
+
+        htable_free(&node->as.element.attrs);
     }
 
     free(node);
