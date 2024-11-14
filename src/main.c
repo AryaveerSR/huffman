@@ -2,19 +2,19 @@
 
 #include "str.h"
 #include "log.h"
-#include "html.h"
+#include "css.h"
 
 int main(void)
 {
     log_init();
     str_init();
 
-    char *source = "<html><body><h1>Title</h1><div id=\"main\" class=\"test\"><p>Hello <em>world</em>!</p></div></body></html>";
+    char *source = "* {   display: block; }  span {   display: inline; }  html {   width: 600px;   padding: 10px;   border-width: 1px;   margin: auto;   background: #ffffff; }  head {   display: none; }  .outer {   background: #00ccff;   border-color: #666666;   border-width: 2px;   margin: 50px;   padding: 50px; }  .inner {   border-color: #cc0000;   border-width: 4px;   height: 100px;   margin-bottom: 20px;   width: 500px; }  .inner#bye {   background: #ffff00; }  span#name {   background: red;   color: white; }";
 
-    struct Node *tree = html_parse(source);
+    struct Stylesheet styles = css_parse(source);
 
-    node_print(tree);
+    stylesheet_print(&styles);
 
-    node_free(tree);
+    stylesheet_free(&styles);
     str_free();
 }
