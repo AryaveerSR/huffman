@@ -68,7 +68,7 @@ void rule_free(struct Rule *rule)
     free(rule);
 }
 
-bool specificity_compare(struct Specificity *a, struct Specificity *b)
+static bool specificity_compare(struct Specificity *a, struct Specificity *b)
 {
     if (a->id > b->id)
     {

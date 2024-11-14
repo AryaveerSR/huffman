@@ -2,9 +2,10 @@ CFLAGS = -std=c18 -Iinclude
 
 CFLAGS += -Wall -Wextra -Wpedantic
 CFLAGS += -Wswitch-enum -Wstrict-prototypes -Wmissing-variable-declarations
-
 CFLAGS += -fsanitize=address -g
-# CFLAGS += -Weverything -Wno-padded -Wno-extra-semi-stmt -Wno-declaration-after-statement -Wno-covered-switch-default -Wno-format-nonliteral
+
+# CFLAGS += -Weverything -Wno-padded -Wno-extra-semi-stmt -Wno-declaration-after-statement -Wno-covered-switch-default 
+# CFLAGS += -Wno-format-nonliteral -Wno-double-promotion
 
 .PHONY: clean build build-gdb run
 

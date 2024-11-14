@@ -73,18 +73,18 @@ static char *css_consume_identifier(void)
     return identifier;
 }
 
-uint8_t css_consume_hex_pair(void)
+static uint8_t css_consume_hex_pair(void)
 {
-    char high_char = css_advance();
-    char low_char = css_advance();
+    uint8_t high_char = (uint8_t)css_advance();
+    uint8_t low_char = (uint8_t)css_advance();
 
     uint8_t high = (high_char & 0xF) + (high_char >> 6) | ((high_char >> 3) & 0x8);
     uint8_t low = (low_char & 0xF) + (low_char >> 6) | ((low_char >> 3) & 0x8);
 
-    return (high << 4) | low;
+    return (uint8_t)((high << 4) | low);
 }
 
-struct Selector *css_parse_selector(void)
+static struct Selector *css_parse_selector(void)
 {
     struct Selector *selector = selector_new(SELECTOR_SIMPLE);
 
@@ -124,7 +124,7 @@ struct Selector *css_parse_selector(void)
     return selector;
 }
 
-struct Value css_parse_length(void)
+static struct Value css_parse_length(void)
 {
     char *end;
     float magnitude = strtof(cp.source + cp.current_idx, &end);
@@ -147,7 +147,7 @@ struct Value css_parse_length(void)
     return value;
 }
 
-struct Value css_parse_hex_color(void)
+static struct Value css_parse_hex_color(void)
 {
     css_expect('#');
 
@@ -158,7 +158,7 @@ struct Value css_parse_hex_color(void)
     return (struct Value){.type = VALUE_COLOR, .as = {.color = {.r = r, .g = g, .b = b, .a = 255}}};
 }
 
-struct Value css_parse_value(void)
+static struct Value css_parse_value(void)
 {
     if (isdigit(css_peek()))
     {
@@ -173,7 +173,7 @@ struct Value css_parse_value(void)
     return (struct Value){.type = VALUE_KEYWORD, .as = {.keyword = css_consume_identifier()}};
 }
 
-struct Declaration *css_parse_declaration(void)
+static struct Declaration *css_parse_declaration(void)
 {
     char *name = css_consume_identifier();
 
@@ -188,7 +188,7 @@ struct Declaration *css_parse_declaration(void)
     return declaration_new(name, value);
 }
 
-struct Rule *css_parse_rule(void)
+static struct Rule *css_parse_rule(void)
 {
     struct Rule *rule = rule_new();
 
