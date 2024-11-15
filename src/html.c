@@ -10,10 +10,8 @@
  */
 
 /**
- * Global state for the parser.
- * todo!() doc
+ * Pointer to where we are in the input string.
  */
-
 static char *source;
 
 // Forward declarations.
