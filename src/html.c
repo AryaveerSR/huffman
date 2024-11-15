@@ -11,17 +11,10 @@
 
 /**
  * Global state for the parser.
- *
- * `source` is the input stream (stays constant).
- * `current_idx` is the current position while parsing.
+ * todo!() doc
  */
-struct HTMLParser
-{
-    char *source;
-    unsigned int current_idx;
-};
 
-static struct HTMLParser hp;
+static char *source;
 
 // Forward declarations.
 static struct Node *html_parse_node(void);
@@ -38,8 +31,8 @@ static struct Node *html_parse_node(void);
  */
 static char html_advance(void)
 {
-    hp.current_idx += 1;
-    return hp.source[hp.current_idx - 1];
+    source++;
+    return *(source - 1);
 }
 
 /**
@@ -47,7 +40,7 @@ static char html_advance(void)
  */
 static char html_peek(void)
 {
-    return hp.source[hp.current_idx];
+    return *source;
 }
 
 /**
@@ -57,7 +50,7 @@ static char html_peek(void)
  */
 static char html_peek_nth(unsigned int n)
 {
-    return hp.source[hp.current_idx + n];
+    return *(source + n);
 }
 
 /**
@@ -102,14 +95,14 @@ static void html_consume_whitespace(void)
  */
 static char *html_consume_identifier(void)
 {
-    unsigned int start_idx = hp.current_idx;
+    char *start_ptr = source;
 
     while (isalnum(html_peek()) || (html_peek() == '-'))
     {
         html_advance();
     }
 
-    char *identifier = str_intern(hp.source + start_idx, hp.current_idx - start_idx);
+    char *identifier = str_intern(start_ptr, source - start_ptr);
 
     trace("Consumed identifier %s.", identifier);
 
@@ -124,14 +117,14 @@ static char *html_consume_identifier(void)
  */
 static struct Node *html_parse_text(void)
 {
-    unsigned int start_idx = hp.current_idx;
+    char *start_ptr = source;
 
     while ((html_peek() != '<') && (html_peek() != '\0'))
     {
         html_advance();
     }
 
-    char *text = str_intern(hp.source + start_idx, hp.current_idx - start_idx);
+    char *text = str_intern(start_ptr, source - start_ptr);
 
     trace("Parsed text \"%s\".", text);
 
@@ -161,14 +154,14 @@ static struct Node *html_parse_element(void)
         html_expect('=');
         html_expect('"');
 
-        unsigned int start_idx = hp.current_idx;
+        char *start_ptr = source;
 
         while (html_peek() != '"')
         {
             html_advance();
         }
 
-        char *attr_value = str_intern(hp.source + start_idx, hp.current_idx - start_idx);
+        char *attr_value = str_intern(start_ptr, source - start_ptr);
 
         html_expect('"');
         html_consume_whitespace();
@@ -190,12 +183,12 @@ static struct Node *html_parse_element(void)
     html_expect('<');
     html_expect('/');
 
-    if (strncmp(hp.source + hp.current_idx, tag, strlen(tag)) != 0)
+    if (strncmp(source, tag, strlen(tag)) != 0)
     {
-        panic("Expected closing tag for %s, found %.*s", tag, hp.source + hp.current_idx);
+        panic("Expected closing tag for %s, found %.*s", tag, source);
     }
 
-    hp.current_idx += strlen(tag);
+    source += strlen(tag);
 
     html_expect('>');
 
@@ -228,10 +221,9 @@ static struct Node *html_parse_node(void)
  *
  * @returns Source parsed into a DOM tree.
  */
-struct Node *html_parse(char *source)
+struct Node *html_parse(char *source_str)
 {
-    hp.source = source;
-    hp.current_idx = 0;
+    source = source_str;
 
     return html_parse_node();
 }
