@@ -7,25 +7,17 @@
 #include "str.h"
 #include "log.h"
 
-struct CSSParser
-{
-    char *source;
-
-    unsigned int start_idx;
-    unsigned int current_idx;
-};
-
-static struct CSSParser cp;
+char *source;
 
 static char css_advance(void)
 {
-    cp.current_idx += 1;
-    return cp.source[cp.current_idx - 1];
+    source++;
+    return *(source - 1);
 }
 
 static char css_peek(void)
 {
-    return cp.source[cp.current_idx];
+    return *source;
 }
 
 static void css_expect(char ch)
@@ -59,14 +51,14 @@ static void css_consume_whitespace(void)
 
 static char *css_consume_identifier(void)
 {
-    cp.start_idx = cp.current_idx;
+    char *start_ptr = source;
 
     while (isalnum(css_peek()) || (css_peek() == '-'))
     {
         css_advance();
     }
 
-    char *identifier = str_intern((char *)(cp.source + cp.start_idx), cp.current_idx - cp.start_idx);
+    char *identifier = str_intern(start_ptr, source - start_ptr);
 
     trace("Consumed identifier %s.", identifier);
 
@@ -126,10 +118,7 @@ static struct Selector *css_parse_selector(void)
 
 static struct Value css_parse_length(void)
 {
-    char *end;
-    float magnitude = strtof(cp.source + cp.current_idx, &end);
-
-    cp.current_idx += end - (cp.source + cp.current_idx);
+    float magnitude = strtof(source, &source);
 
     char *unit = css_consume_identifier();
 
@@ -141,7 +130,7 @@ static struct Value css_parse_length(void)
     }
     else
     {
-        panic("Unknown length unit: %.*s.", 16, cp.source + cp.current_idx);
+        panic("Unknown length unit: %.*s.", 4, source);
     }
 
     return value;
@@ -217,11 +206,9 @@ static struct Rule *css_parse_rule(void)
     return rule;
 }
 
-struct Stylesheet css_parse(char *source)
+struct Stylesheet css_parse(char *source_str)
 {
-    cp.source = source;
-    cp.start_idx = 0;
-    cp.current_idx = 0;
+    source = source_str;
 
     struct Stylesheet stylesheet = {.rules = NULL};
 

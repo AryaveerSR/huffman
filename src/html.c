@@ -7,10 +7,13 @@
 
 /**
  * A basic HTML parser that turns an input string into the DOM representation in `dom.h`.
+ *
+ * It is definitely not spec-compliant and can only parse a small subset of correct HTML.
  */
 
 /**
- * Pointer to where we are in the input string.
+ * Pointer to the source string.
+ * It is incremented when consuming characters, hence always points to the next character to be consumed.
  */
 static char *source;
 
