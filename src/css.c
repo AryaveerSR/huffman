@@ -196,6 +196,12 @@ static struct Rule *css_parse_rule(void)
     {
         rule_push_selector(rule, css_parse_selector());
         css_consume_whitespace();
+
+        if (css_peek() == ',')
+        {
+            css_advance();
+            css_consume_whitespace();
+        }
     }
 
     css_advance();

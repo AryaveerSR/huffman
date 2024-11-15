@@ -4,17 +4,22 @@
 #include "log.h"
 #include "css.h"
 
+void try_source(char *source)
+{
+    struct Stylesheet styles = css_parse(source);
+
+    stylesheet_print(&styles);
+    stylesheet_free(&styles);
+}
+
 int main(void)
 {
     log_init();
     str_init();
 
-    char *source = "* {   display: block; }  html {   width: 600px;  background: #ffffff; }   .inner#bye {   background: #ffff00; }  span#name {   background: red;   color: white; }";
+    try_source("* {   display: block; } html {   width: 600px;  background: #ffffff; }");
+    try_source(".inner#bye {   background: #ffff00; }");
+    try_source("span#name , p.class {   background: red;   color: white; }");
 
-    struct Stylesheet styles = css_parse(source);
-
-    stylesheet_print(&styles);
-
-    stylesheet_free(&styles);
     str_free();
 }
