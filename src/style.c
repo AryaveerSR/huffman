@@ -31,7 +31,7 @@ struct Rule *rule_new(void)
 
     if (ptr == NULL)
     {
-        panic("Out of memory.");
+        out_of_memory();
     }
 
     ptr->selectors = NULL;
@@ -121,7 +121,7 @@ struct Selector *selector_new(enum SelectorType type)
 
     if (ptr == NULL)
     {
-        panic("Out of memory.");
+        out_of_memory();
     }
 
     ptr->type = type;
@@ -177,7 +177,7 @@ void selector_push_class(struct Selector *selector, char *class)
 
     if (ptr == NULL)
     {
-        panic("Out of memory.");
+        out_of_memory();
     }
 
     ptr->name = class;
@@ -192,7 +192,7 @@ struct Declaration *declaration_new(char *name, struct Value value)
 
     if (ptr == NULL)
     {
-        panic("Out of memory.");
+        out_of_memory();
     }
 
     ptr->name = name;

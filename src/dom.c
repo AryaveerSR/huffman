@@ -10,7 +10,7 @@ struct Node *node_alloc(struct Node node)
 
     if (ptr == NULL)
     {
-        panic("Out of memory.");
+        out_of_memory();
     }
 
     *ptr = node;
